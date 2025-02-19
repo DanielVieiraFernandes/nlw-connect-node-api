@@ -9,14 +9,14 @@ export const accessInviteLinkroute: FastifyPluginAsyncZod = async app => {
     '/invites/:subscriberId',
     {
       schema: {
-        summary: 'Access invite link and redirects user',
+        summary: 'Get subscriber ranking invite clicks count',
         tags: ['referral'],
         description: 'Description',
         params: z.object({
           subscriberId: z.string(),
         }),
         response: {
-          201: z.object({
+          302: z.object({
             subscriberId: z.string(),
           }),
         },
@@ -25,7 +25,7 @@ export const accessInviteLinkroute: FastifyPluginAsyncZod = async app => {
     async (req, res) => {
       const { subscriberId } = req.params;
 
-      await accessInviteLink({subscriberId});
+      await accessInviteLink({ subscriberId });
 
       console.log(subscriberId);
 
@@ -34,7 +34,7 @@ export const accessInviteLinkroute: FastifyPluginAsyncZod = async app => {
       redirectUrl.searchParams.set('referrer', subscriberId);
 
       // 301: redirect permanente (os browsers fazem um cache)
-      // 302: redirect temporário 
+      // 302: redirect temporário
 
       return res.redirect(redirectUrl.toString(), 302);
     }
